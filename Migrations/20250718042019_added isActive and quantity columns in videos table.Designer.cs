@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using bogsy_video_store.Data;
 
@@ -11,9 +12,11 @@ using bogsy_video_store.Data;
 namespace bogsy_video_store.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250718042019_added isActive and quantity columns in videos table")]
+    partial class addedisActiveandquantitycolumnsinvideostable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,11 +31,7 @@ namespace bogsy_video_store.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<string>("first_name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("last_name")
+                    b.Property<string>("customer_name")
                         .IsRequired()
                         .HasColumnType("longtext");
 

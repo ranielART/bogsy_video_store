@@ -24,7 +24,7 @@ namespace bogsy_video_store.Controllers
         [HttpPost]
         public async Task<IActionResult> AddCustomer(AddCustomerDto addCustomerDto)
         {
-            var customer = new CustomerEntity() { customer_name = addCustomerDto.customer_name};
+            var customer = new CustomerEntity() { first_name = addCustomerDto.first_name, last_name = addCustomerDto.last_name };
 
             dbContext.customers.Add(customer);
             await dbContext.SaveChangesAsync();
@@ -96,7 +96,8 @@ namespace bogsy_video_store.Controllers
                 });
             }
 
-            customer.customer_name = updateCustomerDto.customer_name;
+            customer.first_name = updateCustomerDto.first_name;
+            customer.last_name = updateCustomerDto.last_name;
             dbContext.customers.Update(customer);
             await dbContext.SaveChangesAsync();
 

@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace bogsy_video_store.Entities
+namespace bogsy_video_store.DTO.VideoDto
 {
-    public class VideoEntity
+    public class AddVideoDto
     {
-        public Guid id { get; set; }
+        
 
         [Required(ErrorMessage = "Video Name is Required!")]
         public string video_name { get; set; }
@@ -16,16 +16,10 @@ namespace bogsy_video_store.Entities
         [Range(1, 3, ErrorMessage = "Rental duration must be from 1 to 3 days")]
         public int rent_days { get; set; }
 
-        [Required(ErrorMessage = "Video Price is Required!")]
-        public float video_price { get; set; }
-
-
-        
-        public Boolean isActive { get; set; } = true;
-
         public int quantity { get; set; }
 
-        public List<RentalEntity> rentals { get; set; }
 
+        [Required(ErrorMessage = "Video Price is Required!")]
+        public float video_price { get; set; }
     }
 }
