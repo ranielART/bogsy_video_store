@@ -1,80 +1,84 @@
-BOGSY VIDEO STORE - ASP.NET Core 8.0 MVC + MySQL + EF Core
+BOGSY VIDEO STORE
+==========================
+A simple ASP.NET Core 8.0 Web API for managing a video rental store.
 
-==========================================
-🧾 PROJECT OVERVIEW
-This is a simple video rental store management system built using:
-- ASP.NET Core 8.0 (Web API)
-- Entity Framework Core 8.0 (Pomelo for MySQL)
-- MySQL as the database
-- Swagger for API documentation
+**Built with:**
+- ASP.NET Core **8.0** (Web API)
+- Entity Framework Core (**Pomelo** for MySQL)
+- **MySQL** database
+- **Swagger** for API testing and documentation
 
-==========================================
-🚀 HOW TO SET UP AND RUN
+-------------------------------------------------------
+1. PROJECT STRUCTURE
+-------------------------------------------------------
 
-1. ✅ INSTALL REQUIRED TOOLS
-   - Visual Studio 2022 or later with ASP.NET & EF workloads
-   - XAMPP (for MySQL and phpMyAdmin)
-   - .NET 8 SDK
+/Controllers
+    - VideoController.cs
+    - RentalController.cs
+    - ReportController.cs
 
-2. ⚙️ SET UP MYSQL DATABASE
-   - Open **XAMPP Control Panel**
-   - Start **Apache** and **MySQL**
-   - Open **phpMyAdmin**
-   - Create a new database named: `bogsy_db`
+/Models
+    - video.cs
+    - rental.cs
 
-3. 📥 CLONE THE PROJECT
-   Open terminal or Git Bash, then run:
-4. 📂 OPEN IN VISUAL STUDIO
-- Open the cloned folder using Visual Studio
-- Make sure the selected startup project is correct
+/Data
+    - ApplicationDbContext.cs
 
-5. 🔐 USER SECRETS / CONNECTION STRING
-This project uses **UserSecrets** for managing connection strings:
-- Run this command in terminal inside the project folder:
-  ```
-  dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost;Database=bogsy_db;User=root;Password=;"
-  ```
+Other Important Files:
+    - Program.cs
+    - appsettings.json
+    - Properties/launchSettings.json
+    - .csproj file (configured with Docker, EF, and MySQL packages)
 
-6. 🔄 APPLY MIGRATIONS
-- Open Package Manager Console or terminal
-- Run the following commands:
-  ```
-  dotnet ef migrations add InitialCreate
-  dotnet ef database update
-  ```
+-------------------------------------------------------
+2. SETUP INSTRUCTIONS
+-------------------------------------------------------
 
-7. ▶️ RUN THE PROJECT
-- Press F5 or click on "Run"
-- Swagger UI will open at `https://localhost:<port>/swagger`
-- Test endpoints directly from Swagger
+**Step 1: Install Requirements**
+-----------------------------------
+- .NET 8 SDK
+- Visual Studio 2022 or later (with ASP.NET + EF Core support)
+- XAMPP or standalone MySQL server
+- MySQL Workbench or phpMyAdmin (optional for managing DB)
 
-==========================================
-📦 NUGET PACKAGES USED
+**Step 2: Start MySQL Server**
+-----------------------------------
+- **Open XAMPP**
+- Click **Start** on both **Apache** and **MySQL**
+- Visit http://localhost/phpmyadmin to verify MySQL is running
 
-<Project Sdk="Microsoft.NET.Sdk.Web">
+**Step 3: Create Database**
+-----------------------------------
+- In phpMyAdmin or MySQL Workbench, create a database named:
+    **bogsy_db**
 
-<PropertyGroup>
- <TargetFramework>net8.0</TargetFramework>
- <Nullable>enable</Nullable>
- <ImplicitUsings>enable</ImplicitUsings>
- <UserSecretsId>37929a43-0d92-44a1-aafe-63f2368de1ac</UserSecretsId>
- <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
- <DockerfileContext>.</DockerfileContext>
-</PropertyGroup>
+**Step 4: Clone the Project**
+-----------------------------------
+Run the following in terminal:
 
-<ItemGroup>
- <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.4">
-   <PrivateAssets>all</PrivateAssets>
-   <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
- </PackageReference>
- <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
- <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.3" />
- <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
-</ItemGroup>
+    git clone https://github.com/yourusername/bogsy-video-store.git
 
-<ItemGroup>
- <Folder Include="Migrations\" />
- <Folder Include="Models\" />
-</ItemGroup>
+**Step 5: Add User Secrets for Connection String**
+----------------------------------------------------
+In the project root folder, run:
 
-</Project>
+    dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost;Database=bogsy_db;User=root;Password=;"
+
+**Step 6: Apply Migrations**
+-------------------------------
+Generate initial migration and update the database:
+
+    dotnet ef migrations add InitialCreate
+    dotnet ef database update
+
+**Step 7: Run the Application**
+-----------------------------------
+Run from Visual Studio using **F5** or from terminal:
+
+    dotnet run
+
+Open your browser and navigate to:
+
+    https://localhost:5001/swagger
+
+You'll see **Swagger UI** for interacting with the API.
