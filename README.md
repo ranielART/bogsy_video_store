@@ -56,7 +56,7 @@ Other Important Files:
 -----------------------------------
 Run the following in terminal:
 
-    git clone https://github.com/yourusername/bogsy-video-store.git
+    git clone git@github.com:ranielART/bogsy_video_store.git
 
 **Step 5: Add User Secrets for Connection String**
 ----------------------------------------------------
