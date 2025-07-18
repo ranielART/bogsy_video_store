@@ -145,6 +145,7 @@ namespace bogsy_video_store.Controllers
 
             return Ok(new
             {
+                status = 200,
                 message = "Video returned successfully.",
                 overdue_fee = rental.overdue_price,
                 overdue_days = overdueDays
