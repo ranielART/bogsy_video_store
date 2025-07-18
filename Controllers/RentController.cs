@@ -30,6 +30,11 @@ namespace bogsy_video_store.Controllers
             if (rentDays <= 0)
                 return BadRequest("Return date must be after rent date.");
 
+            if (rentDays > video.rent_days)
+            {
+                return BadRequest("The maximum number of days to rent is 3 days.");
+            }
+
             float totalPrice = rentDays * video.video_price;
 
             var rental = new RentalEntity
@@ -60,8 +65,10 @@ namespace bogsy_video_store.Controllers
                     rental_id = rental.id,
                     customer_id = rental.customer_id,
                     video_id = rental.video_id,
-                    total_price = rental.total_price
-
+                    total_price = rental.total_price,
+                    rent_date = rental.rent_date,
+                    return_date = rental.return_date,
+                    rent_days = rental.rent_days,   
 
                 }
             });
@@ -81,8 +88,6 @@ namespace bogsy_video_store.Controllers
                 });
             }
 
-
-
             return Ok(new {
                 status = 200, 
                 message = "Rentals Retrieved Successfully",
@@ -90,6 +95,60 @@ namespace bogsy_video_store.Controllers
             });
         }
 
-        
+        [HttpGet("unreturned-rentals")]
+        public async Task<IActionResult> GetAllUnreturnedRentals()
+        {
+
+            var rentals = await dbContext.rentals.Where(r => r.is_returned == false).ToListAsync();
+            if (rentals.Count == 0)
+            {
+                return NotFound(new
+                {
+                    status = 404,
+                    message = "No Rentals Found."
+                });
+            }
+
+            return Ok(new
+            {
+                status = 200,
+                message = "Rentals Retrieved Successfully",
+                data = rentals
+            });
+        }
+
+        [HttpPut("return/{id}")]
+        public async Task<IActionResult> ReturnVideo(Guid id, DateTime actual_return_date)
+        {
+            var rental = await dbContext.rentals
+                .Include(r => r.video)
+                .FirstOrDefaultAsync(r => r.id == id);
+
+            if (rental == null)
+                return NotFound("Rental record not found.");
+
+            var expectedReturnDate = rental.return_date;
+            var actualReturnDate = actual_return_date;
+
+            int overdueDays = (actualReturnDate - expectedReturnDate).Days;
+            if (overdueDays > 0)
+            {
+                rental.overdue_price = overdueDays * 5;
+
+
+            }
+            rental.is_returned = true;
+
+            dbContext.Update(rental);
+            await dbContext.SaveChangesAsync();
+
+            return Ok(new
+            {
+                message = "Video returned successfully.",
+                overdue_fee = rental.overdue_price,
+                overdue_days = overdueDays
+            });
+        }
+
     }
 }
