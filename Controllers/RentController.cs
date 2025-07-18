@@ -30,6 +30,16 @@ namespace bogsy_video_store.Controllers
             if (rentDays <= 0)
                 return BadRequest(new { status = 404, message = "Return date must be after rent date." });
 
+            if (video.quantity < dto.rent_quantity)
+            {
+                return BadRequest(new { status = 404, message = "Not enough video quantity." });
+            }
+
+            if(dto.rent_quantity <= 0)
+            {
+                return BadRequest(new { status = 404, message = "The quantity should be at least 1." });
+            }
+
             if (rentDays > video.rent_days)
             {
                 return BadRequest(new { status = 400, message = "The maximum number of days to rent is 3 days." });
@@ -49,9 +59,12 @@ namespace bogsy_video_store.Controllers
                 video_id = dto.video_id,
                 customer = customer,
                 video = video,
-                is_returned = false
+                is_returned = false,
+                rent_quantity = dto.rent_quantity
             };
 
+            video.quantity -= dto.rent_quantity;
+            dbContext.videos.Update(video);
             dbContext.rentals.Add(rental);
             await dbContext.SaveChangesAsync();
 
@@ -125,8 +138,33 @@ namespace bogsy_video_store.Controllers
                 .FirstOrDefaultAsync(r => r.id == id);
 
             if (rental == null)
-                return NotFound( new { status = 404,
-                    message = "Rental record not found." });
+            {
+                return NotFound(new
+                {
+                    status = 404,
+                    message = "Rental record not found."
+                });
+            }
+
+            var video = rental.video;
+
+            if (video == null)
+            {
+                return NotFound(new
+                {
+                    status = 404,
+                    message = "Video record not found."
+                });
+            }
+
+            if (rental.is_returned)
+            {
+                return BadRequest(new
+                {
+                    status = 400,
+                    message = "This video has already been returned."
+                });
+            }
 
             var expectedReturnDate = rental.return_date;
             var actualReturnDate = actual_return_date;
@@ -134,13 +172,14 @@ namespace bogsy_video_store.Controllers
             int overdueDays = (actualReturnDate - expectedReturnDate).Days;
             if (overdueDays > 0)
             {
-                rental.overdue_price = overdueDays * 5;
-
-
+                rental.overdue_price = overdueDays * 5; 
             }
+
             rental.is_returned = true;
+            video.quantity += rental.rent_quantity;
 
             dbContext.Update(rental);
+            dbContext.Update(video);
             await dbContext.SaveChangesAsync();
 
             return Ok(new
@@ -148,7 +187,7 @@ namespace bogsy_video_store.Controllers
                 status = 200,
                 message = "Video returned successfully.",
                 overdue_fee = rental.overdue_price,
-                overdue_days = overdueDays
+                overdue_days = overdueDays > 0 ? overdueDays : 0
             });
         }
 

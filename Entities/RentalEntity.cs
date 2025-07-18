@@ -24,7 +24,9 @@ namespace bogsy_video_store.Entities
         public Guid video_id { get; set; }
         public VideoEntity video { get; set; }
            
+         
 
+        public int rent_quantity { get; set; }
 
         public int rent_days { get; set; }
 

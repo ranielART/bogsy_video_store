@@ -29,8 +29,6 @@ namespace bogsy_video_store.Controllers
             dbContext.customers.Add(customer);
             await dbContext.SaveChangesAsync();
 
-            
-
             return Ok(new
             {
                 status = 201,

@@ -11,6 +11,9 @@ namespace bogsy_video_store.DTO.RentDto
         [Required]
         public Guid video_id { get; set; }
 
+        //[Required]
+        public int rent_quantity { get; set; }
+
         [Required]
         public DateTime rent_date { get; set; }
 
