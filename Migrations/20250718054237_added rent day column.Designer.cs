@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using bogsy_video_store.Data;
 
@@ -11,9 +12,11 @@ using bogsy_video_store.Data;
 namespace bogsy_video_store.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250718054237_added rent day column")]
+    partial class addedrentdaycolumn
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -50,13 +53,13 @@ namespace bogsy_video_store.Migrations
                     b.Property<Guid>("customer_id")
                         .HasColumnType("char(36)");
 
-                    b.Property<bool>("is_returned")
-                        .HasColumnType("tinyint(1)");
-
                     b.Property<float>("overdue_price")
                         .HasColumnType("float");
 
                     b.Property<DateTime>("rent_date")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("rent_day")
                         .HasColumnType("datetime(6)");
 
                     b.Property<int>("rent_days")

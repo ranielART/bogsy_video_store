@@ -12,6 +12,8 @@ namespace bogsy_video_store.Entities
         [Required]
         public DateTime return_date { get; set; }
 
+        
+
 
 
         [Required]
@@ -30,7 +32,8 @@ namespace bogsy_video_store.Entities
 
         public float overdue_price { get; set; }
 
-
+        [Required]
+        public Boolean is_returned { get; set; } = false;
 
     }
 }

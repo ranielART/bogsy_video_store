@@ -22,10 +22,15 @@ namespace bogsy_video_store.Controllers
         [HttpPost]
         public async Task<IActionResult> AddVideo(AddVideoDto addVideoDto)
         {
+            string type = addVideoDto.video_type.ToUpper();
 
-            string[] allowedTypes = { "VCD", "DVD" };
+            var videoPrices = new Dictionary<string, int>
+            {
+                { "VCD", 25 },
+                { "DVD", 50 }
+            };
 
-            if (!allowedTypes.Contains(addVideoDto.video_type.ToUpper()))
+            if (!videoPrices.ContainsKey(type))
             {
                 return BadRequest(new
                 {
@@ -34,7 +39,7 @@ namespace bogsy_video_store.Controllers
                 });
             }
 
-            if(addVideoDto.quantity < 0)
+            if (addVideoDto.quantity < 0)
             {
                 return BadRequest(new
                 {
@@ -44,25 +49,23 @@ namespace bogsy_video_store.Controllers
             }
 
             var video = new VideoEntity()
-            {   
-
+            {
                 video_name = addVideoDto.video_name,
-                video_type = addVideoDto.video_type,
+                video_type = type,
                 rent_days = addVideoDto.rent_days,
-                video_price = addVideoDto.video_price,
+                video_price = videoPrices[type], 
                 quantity = addVideoDto.quantity > 0 ? addVideoDto.quantity : 1,
             };
 
-
-
             dbContext.videos.Add(video);
             await dbContext.SaveChangesAsync();
+
             return Ok(new
             {
                 status = 201,
                 message = "Video Added Successfully.",
                 data = new
-                {   
+                {
                     id = video.id,
                     video_name = video.video_name,
                     video_type = video.video_type,
@@ -150,7 +153,9 @@ namespace bogsy_video_store.Controllers
             }
 
             string[] allowedTypes = { "VCD", "DVD" };
-            if (!allowedTypes.Contains(addVideoDto.video_type.ToUpper()))
+            string type = addVideoDto.video_type.ToUpper();
+
+            if (!allowedTypes.Contains(type))
             {
                 return BadRequest(new
                 {
@@ -159,23 +164,27 @@ namespace bogsy_video_store.Controllers
                 });
             }
 
+            var priceMap = new Dictionary<string, int>
+            {
+                { "VCD", 25 },
+                { "DVD", 50 }
+            };
 
-            video.video_name = string.IsNullOrWhiteSpace(addVideoDto.video_name) ? addVideoDto.video_name : video.video_name;
-            video.video_type = string.IsNullOrWhiteSpace(addVideoDto.video_type) ? addVideoDto.video_type : video.video_type;
+            video.video_name = string.IsNullOrWhiteSpace(addVideoDto.video_name) ? video.video_name : addVideoDto.video_name;
+            video.video_type = addVideoDto.video_type;
             video.rent_days = addVideoDto.rent_days;
-            video.video_price = addVideoDto.video_price;
-            video.quantity = addVideoDto.quantity;
-
-
+            video.video_price = priceMap[type];
+            video.quantity = addVideoDto.quantity >= 0 ? addVideoDto.quantity : video.quantity;
 
             dbContext.videos.Update(video);
             await dbContext.SaveChangesAsync();
+
             return Ok(new
             {
                 status = 200,
                 message = "Video Updated Successfully.",
                 data = new
-                {   
+                {
                     id = video.id,
                     video_name = video.video_name,
                     video_type = video.video_type,
@@ -185,6 +194,7 @@ namespace bogsy_video_store.Controllers
                 }
             });
         }
+
 
         [HttpDelete("{id:guid}")]
         public async Task<IActionResult> DeleteVideo(Guid id)
