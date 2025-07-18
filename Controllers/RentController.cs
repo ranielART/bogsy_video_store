@@ -24,15 +24,15 @@ namespace bogsy_video_store.Controllers
             var video = await dbContext.videos.FindAsync(dto.video_id);
 
             if (customer == null || video == null)
-                return NotFound("Customer or video not found.");
+                return NotFound(new { status = 404, message = "Customer or video not found." });
 
             var rentDays = (dto.return_date - dto.rent_date).Days;
             if (rentDays <= 0)
-                return BadRequest("Return date must be after rent date.");
+                return BadRequest(new { status = 404, message = "Return date must be after rent date." });
 
             if (rentDays > video.rent_days)
             {
-                return BadRequest("The maximum number of days to rent is 3 days.");
+                return BadRequest(new { status = 400, message = "The maximum number of days to rent is 3 days." });
             }
 
             float totalPrice = rentDays * video.video_price;
@@ -125,7 +125,8 @@ namespace bogsy_video_store.Controllers
                 .FirstOrDefaultAsync(r => r.id == id);
 
             if (rental == null)
-                return NotFound("Rental record not found.");
+                return NotFound( new { status = 404,
+                    message = "Rental record not found." });
 
             var expectedReturnDate = rental.return_date;
             var actualReturnDate = actual_return_date;
