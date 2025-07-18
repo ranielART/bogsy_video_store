@@ -58,11 +58,10 @@ Run the following in terminal:
 
     git clone git@github.com:ranielART/bogsy_video_store.git
 
-**Step 5: Add User Secrets for Connection String**
-----------------------------------------------------
-In the project root folder, run:
-
-    dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost;Database=bogsy_db;User=root;Password=;"
+**Step 5: Open appsettings.json and add the following:**
+``"ConnectionStrings": {
+  "DefaultConnection": "server=localhost;port=3306;user=root;password=;database=bogsy_db"
+}``
 
 **Step 6: Apply Migrations**
 -------------------------------
