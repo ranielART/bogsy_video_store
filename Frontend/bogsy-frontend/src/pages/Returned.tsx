@@ -25,9 +25,6 @@ type Rental = {
 const Returned = () => {
   const [rentals, setRentals] = useState<Rental[]>([]);
   const [loading, setLoading] = useState(true);
-  //   const [returnModalOpen, setReturnModalOpen] = useState(false);
-  //   const [selectedRental, setSelectedRental] = useState<Rental | null>(null);
-  const [returnLoading, setReturnLoading] = useState(false);
 
   useEffect(() => {
     const fetchRentals = async () => {
@@ -45,36 +42,11 @@ const Returned = () => {
     fetchRentals();
   }, [loading]);
 
-  //   const openReturnModal = (rental: Rental) => {
-  //     setSelectedRental(rental);
-  //     setReturnModalOpen(true);
-  //   };
-
-  //   const closeReturnModal = () => {
-  //     setReturnModalOpen(false);
-  //     setSelectedRental(null);
-  //   };
-
-  //   const handleReturn = async () => {
-  //     if (!selectedRental) return;
-  //     setReturnLoading(true);
-  //     try {
-  //       await axios.put(
-  //         `https://localhost:7063/api/Rent/return/${selectedRental.rental_id}`
-  //       );
-  //       closeReturnModal();
-  //     } catch (error) {
-  //       alert("Failed to return video.");
-  //     } finally {
-  //       setReturnLoading(false);
-  //     }
-  //   };
-
   if (loading) return <div className="p-4">Loading...</div>;
 
   return (
     <div className="p-8 w-full h-full mt-20">
-      <h2 className="text-2xl font-bold mb-4">Unreturned Rentals</h2>
+      <h2 className="text-2xl font-bold mb-4">Returned Rentals History</h2>
       <table className="min-w-full bg-white rounded shadow">
         <thead>
           <tr>

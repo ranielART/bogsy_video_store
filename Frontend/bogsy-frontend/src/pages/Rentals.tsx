@@ -126,7 +126,7 @@ const Rentals = () => {
       </table>
 
       {rentals.length === 0 && (
-        <div className="text-gray-500 mt-4">No unreturned rentals found.</div>
+        <div className="text-gray-500 mt-4">No rentals found.</div>
       )}
 
       {/* Return Modal */}
