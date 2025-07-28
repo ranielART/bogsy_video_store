@@ -21,18 +21,14 @@ const Videos = () => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [editName, setEditName] = useState("");
   const [editType, setEditType] = useState("");
-  // ...existing code...
+
   const [editLoading, setEditLoading] = useState(false);
-  //   const [editRentDays, setEditRentDays] = useState<number | "">("");
-  //   const [editPrice, setEditPrice] = useState<number | "">("");
   const [editQuantity, setEditQuantity] = useState<number | "">("");
 
-  // Add modal state
+
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [addName, setAddName] = useState("");
   const [addType, setAddType] = useState("");
-  //   const [addRentDays, setAddRentDays] = useState<number | "">("");
-  //   const [addPrice, setAddPrice] = useState<number | "">("");
   const [addQuantity, setAddQuantity] = useState<number | "">("");
   const [addLoading, setAddLoading] = useState(false);
 
@@ -54,8 +50,6 @@ const Videos = () => {
     setEditingVideo(video);
     setEditName(video.video_name);
     setEditType(video.video_type);
-    // setEditRentDays(video.rent_days ?? "");
-    // setEditPrice(video.video_price);
     setEditQuantity(video.quantity);
     setEditModalOpen(true);
   };
@@ -67,13 +61,12 @@ const Videos = () => {
 
   const handleEditSave = async () => {
     if (!editingVideo) return;
-    setEditLoading(true); // Start loading
+    setEditLoading(true); 
     try {
       await axios.put(`https://localhost:7063/api/Video/${editingVideo.id}`, {
         video_name: editName,
         video_type: editType,
         rent_days: 3,
-        // video_price: Number(editPrice),
         quantity: Number(editQuantity),
         isActive: true,
       });
@@ -85,7 +78,6 @@ const Videos = () => {
                 video_name: editName,
                 video_type: editType,
                 rent_days: 3,
-                // video_price: Number(editPrice),
                 quantity: Number(editQuantity),
               }
             : v
@@ -102,8 +94,6 @@ const Videos = () => {
   const openAddModal = () => {
     setAddName("");
     setAddType("");
-    // setAddRentDays("");
-    // setAddPrice("");
     setAddQuantity("");
     setAddModalOpen(true);
   };
@@ -116,7 +106,6 @@ const Videos = () => {
     if (
       !addName.trim() ||
       !addType.trim() ||
-      //   addPrice === "" ||
       addQuantity === ""
     ) {
       alert("Please fill all required fields.");
@@ -128,7 +117,6 @@ const Videos = () => {
         video_name: addName,
         video_type: addType,
         rent_days: 3,
-        // video_price: Number(addPrice),
         quantity: Number(addQuantity),
         isActive: true,
       });
@@ -246,36 +234,6 @@ const Videos = () => {
                 </label>
               </div>
             </div>
-            {/* <div className="mb-2">
-              <label className="block text-sm font-medium mb-1">
-                Rent Days
-              </label>
-              <input
-                type="number"
-                className="border px-2 py-1 w-full rounded"
-                value={editRentDays}
-                onChange={(e) =>
-                  setEditRentDays(
-                    e.target.value === "" ? "" : Number(e.target.value)
-                  )
-                }
-                min={0}
-              />
-            </div> */}
-            {/* <div className="mb-2">
-              <label className="block text-sm font-medium mb-1">Price</label>
-              <input
-                type="number"
-                className="border px-2 py-1 w-full rounded"
-                value={editPrice}
-                onChange={(e) =>
-                  setEditPrice(
-                    e.target.value === "" ? "" : Number(e.target.value)
-                  )
-                }
-                min={0}
-              />
-            </div> */}
 
             <div className="flex justify-end gap-2">
               <button
@@ -295,7 +253,7 @@ const Videos = () => {
         </div>
       )}
 
-      {/* Add Video Modal */}
+   
       {addModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/40 bg-opacity-40 z-50">
           <div className="bg-white p-6 rounded shadow-lg min-w-[300px]">
@@ -351,39 +309,7 @@ const Videos = () => {
                 </label>
               </div>
             </div>
-            {/* <div className="mb-2">
-              <label className="block text-sm font-medium mb-1">
-                Rent Days
-              </label>
-              <input
-                type="number"
-                className="border px-2 py-1 w-full rounded"
-                value={addRentDays}
-                onChange={(e) =>
-                  setAddRentDays(
-                    e.target.value === "" ? "" : Number(e.target.value)
-                  )
-                }
-                min={0}
-                disabled={addLoading}
-              />
-            </div> */}
-            {/* <div className="mb-2">
-              <label className="block text-sm font-medium mb-1">Price</label>
-              <input
-                type="number"
-                className="border px-2 py-1 w-full rounded"
-                value={addPrice}
-                onChange={(e) =>
-                  setAddPrice(
-                    e.target.value === "" ? "" : Number(e.target.value)
-                  )
-                }
-                min={0}
-                disabled={addLoading}
-              />
-            </div> */}
-
+            
             <div className="flex justify-end gap-2">
               <button
                 className="bg-gray-300 px-3 py-1 rounded"
