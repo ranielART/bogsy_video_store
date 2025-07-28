@@ -12,7 +12,8 @@ namespace bogsy_video_store.Entities
         [Required]
         public DateTime return_date { get; set; }
 
-        
+        [Required]
+        public DateTime date_returned{ get; set; }
 
 
 
