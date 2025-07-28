@@ -95,4 +95,4 @@ npm run dev
 - Report of unreturned rentals
 - Customer rental modal
 - Backend API built using clean architecture
-- Modern frontend UI using TailwindCSS and ShadCN components
+- Modern frontend UI using TailwindCSS
