@@ -19,10 +19,10 @@ builder.Services.AddCors(options =>
     options.AddDefaultPolicy(policy =>
     {
         policy
-            .WithOrigins("https://localhost:5173", "http://localhost:5173") // both http and https
+            .AllowAnyOrigin() 
             .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials(); // if using cookies/auth later
+            .AllowAnyMethod();
+            
     });
 });
 var app = builder.Build();
