@@ -1,0 +1,16 @@
+﻿using bogsy_video_store.Entities;
+using System.ComponentModel.DataAnnotations;
+
+namespace bogsy_video_store.DTO.RentDto
+{
+    public class ReturnVideoDto
+    {
+        
+
+        [Required]
+        public DateTime actual_return_date { get; set; }
+
+        
+
+    }
+}

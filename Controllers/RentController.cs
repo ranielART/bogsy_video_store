@@ -45,13 +45,14 @@ namespace bogsy_video_store.Controllers
                 return BadRequest(new { status = 400, message = "The maximum number of days to rent is 3 days." });
             }
 
-            float totalPrice = rentDays * video.video_price;
+            float totalPrice = dto.rent_quantity * (rentDays * video.video_price);
 
             var rental = new RentalEntity
             {
                 id = Guid.NewGuid(),
                 rent_date = dto.rent_date,
                 return_date = dto.return_date,
+
                 rent_days = rentDays,
                 total_price = totalPrice,
                 overdue_price = 0,
@@ -111,8 +112,32 @@ namespace bogsy_video_store.Controllers
         [HttpGet("unreturned-rentals")]
         public async Task<IActionResult> GetAllUnreturnedRentals()
         {
+            var rentals = await dbContext.rentals
+                .Where(r => r.is_returned == false)
+                .Include(r => r.customer)
+                .Include(r => r.video)
+                .Select(r => new
+                {
+                    rental_id = r.id,
+                    rent_date = r.rent_date,
+                    return_date = r.return_date,
+                    is_returned = r.is_returned,
+                    rent_quantity = r.rent_quantity,
+                    total_price = r.total_price,
+                    customer = new
+                    {
+                        id = r.customer.id,
+                        name = r.customer.first_name + " " + r.customer.last_name,
+                    },
+                    video = new
+                    {
+                        id = r.video.id,
+                        name = r.video.video_name,
+                        quantity = r.video.quantity
+                    }
+                })
+                .ToListAsync();
 
-            var rentals = await dbContext.rentals.Where(r => r.is_returned == false).ToListAsync();
             if (rentals.Count == 0)
             {
                 return NotFound(new
@@ -125,13 +150,66 @@ namespace bogsy_video_store.Controllers
             return Ok(new
             {
                 status = 200,
-                message = "Rentals Retrieved Successfully",
+                message = "Unreturned Rentals Retrieved Successfully",
                 data = rentals
             });
         }
 
+        [HttpGet("returned-rentals")]
+        public async Task<IActionResult> GetAllReturnedRentals()
+        {
+            var rentals = await dbContext.rentals
+                .Where(r => r.is_returned == true)
+                .Include(r => r.customer)
+                .Include(r => r.video)
+                .ToListAsync();
+
+            if (!rentals.Any())
+            {
+                return NotFound(new
+                {
+                    status = 404,
+                    message = "No Rentals Found."
+                });
+            }
+
+            var result = rentals.Select(r => new
+            {
+                rental_id = r.id,
+                rent_date = r.rent_date,
+                return_date = r.return_date,
+                is_returned = r.is_returned,
+                rent_quantity = r.rent_quantity,
+                date_returned = r.date_returned,
+                total_price = r.total_price,
+                overdue_days = (r.date_returned - r.return_date).Days,
+                overdue_price = r.overdue_price > 0
+                    ? ((r.date_returned - r.return_date).Days * r.rent_quantity) * 5 
+                    : 0,
+                customer = new
+                {
+                    id = r.customer.id,
+                    name = r.customer.first_name + " " + r.customer.last_name
+                },
+                video = new
+                {
+                    id = r.video.id,
+                    name = r.video.video_name,
+                    quantity = r.video.quantity
+                }
+            });
+
+            return Ok(new
+            {
+                status = 200,
+                message = "Returned Rentals Retrieved Successfully",
+                data = result
+            });
+        }
+
+
         [HttpPut("return/{id}")]
-        public async Task<IActionResult> ReturnVideo(Guid id, DateTime actual_return_date)
+        public async Task<IActionResult> ReturnVideo(Guid id, [FromBody] ReturnVideoDto returnVideoDto)
         {
             var rental = await dbContext.rentals
                 .Include(r => r.video)
@@ -147,6 +225,8 @@ namespace bogsy_video_store.Controllers
             }
 
             var video = rental.video;
+
+            
 
             if (video == null)
             {
@@ -167,8 +247,7 @@ namespace bogsy_video_store.Controllers
             }
 
             var expectedReturnDate = rental.return_date;
-            var actualReturnDate = actual_return_date;
-
+            var actualReturnDate = returnVideoDto.actual_return_date;
             int overdueDays = (actualReturnDate - expectedReturnDate).Days;
             if (overdueDays > 0)
             {
@@ -176,6 +255,7 @@ namespace bogsy_video_store.Controllers
             }
 
             rental.is_returned = true;
+            rental.date_returned = actualReturnDate;
             video.quantity += rental.rent_quantity;
 
             dbContext.Update(rental);
