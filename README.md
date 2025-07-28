@@ -1,83 +1,98 @@
-BOGSY VIDEO STORE
-==========================
-A simple ASP.NET Core 8.0 Web API for managing a video rental store.
+# 🎬 BOGSY VIDEO STORE
 
-**Built with:**
-- ASP.NET Core **8.0** (Web API)
-- Entity Framework Core (**Pomelo** for MySQL)
-- **MySQL** database
-- **Swagger** for API testing and documentation
+A simple full-stack **video rental system** built with:
 
--------------------------------------------------------
-1. PROJECT STRUCTURE
--------------------------------------------------------
+- ⚙️ **ASP.NET Core 8.0 Web API** (Backend)
+- ⚛️ **React + Vite** (Frontend)
+- 🐬 **MySQL** database (via XAMPP)
+- 📦 **Entity Framework Core** (Pomelo for MySQL)
+- 📚 **Swagger** for API testing and documentation
 
+---
+
+## 📁 Project Structure
+
+```
 /Controllers
-    - VideoController.cs
-    - RentalController.cs
-    - ReportController.cs
+    ├── VideoController.cs
+    ├── RentalController.cs
+    └── ReportController.cs
 
 /Models
-    - video.cs
-    - rental.cs
+    ├── video.cs
+    └── rental.cs
 
 /Data
-    - ApplicationDbContext.cs
+    └── ApplicationDbContext.cs
 
-Other Important Files:
-    - Program.cs
-    - appsettings.json
-    - Properties/launchSettings.json
-    - .csproj file (configured with Docker, EF, and MySQL packages)
+/Frontend/bogsy-frontend
+    └── React + Vite frontend files
+```
 
--------------------------------------------------------
-2. SETUP INSTRUCTIONS
--------------------------------------------------------
+---
 
-**Step 1: Install Requirements**
------------------------------------
-- .NET 8 SDK
-- Visual Studio 2022 or later (with ASP.NET + EF Core support)
-- XAMPP or standalone MySQL server
-- MySQL Workbench or phpMyAdmin (optional for managing DB)
+## ✅ Requirements
 
-**Step 2: Start MySQL Server**
------------------------------------
-- **Open XAMPP**
-- Click **Start** on both **Apache** and **MySQL**
-- Visit http://localhost/phpmyadmin to verify MySQL is running
+- [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- [Visual Studio 2022+](https://visualstudio.microsoft.com/) with ASP.NET & EF Core
+- [Node.js](https://nodejs.org/)
+- [XAMPP](https://www.apachefriends.org/index.html)
 
-**Step 3: Create Database**
------------------------------------
-- In phpMyAdmin or MySQL Workbench, create a database named:
-    **bogsy_db**
+---
 
-**Step 4: Clone the Project**
------------------------------------
-Run the following in terminal:
+## 🧰 Backend Setup
 
-    git clone git@github.com:ranielART/bogsy_video_store.git
+1. Start **XAMPP**, then run **Apache** and **MySQL**
+2. Open [http://localhost/phpmyadmin](http://localhost/phpmyadmin)
+3. Create a new database: `bogsy_db`
+4. Update your connection string in `appsettings.json`:
 
-**Step 5: Open appsettings.json and add the following:**
-``"ConnectionStrings": {
+```json
+"ConnectionStrings": {
   "DefaultConnection": "server=localhost;port=3306;user=root;password=;database=bogsy_db"
-}``
+}
+```
 
-**Step 6: Apply Migrations**
--------------------------------
-Generate initial migration and update the database:
+5. Open terminal in the backend folder and run:
 
-    dotnet ef migrations add InitialCreate
-    dotnet ef database update
+```bash
+dotnet ef database update
+dotnet run
+```
 
-**Step 7: Run the Application**
------------------------------------
-Run from Visual Studio using **F5** or from terminal:
+6. Swagger should now be available at: [https://localhost:port/swagger](https://localhost:port/swagger)
 
-    dotnet run
+---
 
-Open your browser and navigate to:
+## 💻 Frontend Setup (React + Vite)
 
-    https://localhost:5001/swagger
+1. Navigate to the frontend folder:
 
-You'll see **Swagger UI** for interacting with the API.
+```bash
+cd ./Frontend/bogsy-frontend
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Run the app:
+
+```bash
+npm run dev
+```
+
+4. Make sure the backend (Swagger/API) is running before using the frontend.
+
+---
+
+## 📝 Features
+
+- Add, edit, delete, and list videos
+- Rent and return videos
+- Report of unreturned rentals
+- Customer rental modal
+- Backend API built using clean architecture
+- Modern frontend UI using TailwindCSS and ShadCN components
